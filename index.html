@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>הכנישתא שלי</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap');
+        
+        @font-face {
+            font-family: 'Gveret Levin';
+            src: url('GveretLevinAlefAlefAlef-Regular.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --baby-pink: #FFE4EC;
+            --baby-pink-light: #FFF0F5;
+            --baby-pink-dark: #FFB6C8;
+            --mint: #D4F5E4;
+            --mint-subtle: #E8F8F0;
+            --gold: #D4AF37;
+            --gold-subtle: #F5EED6;
+            --white: #FFFFFF;
+            --text-dark: #4A4A4A;
+            --text-light: #6B6B6B;
+        }
+        body { font-family: 'Heebo', sans-serif; background: var(--baby-pink-light); min-height: 100vh; color: var(--text-dark); }
+        .app-container { max-width: 900px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; padding: 30px 20px; background: var(--white); border-radius: 25px; margin-bottom: 20px; border: 2px solid var(--baby-pink-dark); }
+        .header h1 { font-family: 'Gveret Levin', 'Heebo', serif; font-size: 3.2em; color: var(--gold); margin-bottom: 25px; letter-spacing: 6px; }
+        .header .subtitle { font-size: 1.1em; color: var(--text-light); margin-bottom: 20px; }
+        .quote-box { background: var(--baby-pink-light); padding: 20px; border-radius: 15px; border-right: 4px solid var(--gold); text-align: right; font-size: 0.95em; line-height: 1.8; }
+        .quote-box .source { font-weight: 600; color: var(--gold); margin-bottom: 10px; display: block; }
+        .tabs-container { background: var(--white); border-radius: 20px; padding: 15px; margin-bottom: 20px; border: 2px solid var(--baby-pink-dark); overflow-x: auto; }
+        .tabs { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+        .tab-btn { padding: 12px 20px; border: 2px solid var(--baby-pink-dark); background: var(--white); border-radius: 25px; cursor: pointer; font-family: inherit; font-size: 0.95em; font-weight: 500; color: var(--text-dark); transition: all 0.3s ease; white-space: nowrap; }
+        .tab-btn:hover { background: var(--baby-pink-light); }
+        .tab-btn.active { background: var(--baby-pink); border-color: var(--baby-pink-dark); }
+        .tab-btn .icon { margin-left: 8px; }
+        .content-area { background: var(--white); border-radius: 25px; padding: 25px; min-height: 500px; border: 2px solid var(--baby-pink-dark); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .section-title { font-size: 1.5em; color: var(--gold); margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid var(--baby-pink); }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 500; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px 15px; border: 2px solid var(--baby-pink); border-radius: 12px; font-family: inherit; font-size: 1em; }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: var(--baby-pink-dark); }
+        .form-group textarea { min-height: 100px; resize: vertical; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+        .btn { padding: 12px 25px; border: none; border-radius: 25px; cursor: pointer; font-family: inherit; font-size: 1em; font-weight: 500; transition: all 0.3s ease; }
+        .btn-primary { background: var(--baby-pink); color: var(--text-dark); border: 2px solid var(--baby-pink-dark); }
+        .btn-primary:hover { background: var(--baby-pink-dark); color: var(--white); }
+        .btn-secondary { background: var(--baby-pink-light); color: var(--text-dark); border: 2px solid var(--baby-pink); }
+        .btn-secondary:hover { background: var(--baby-pink); }
+        .btn-group { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
+        .items-list { margin-top: 25px; }
+        .items-list h3 { color: var(--gold); margin-bottom: 15px; }
+        .saved-item { background: var(--baby-pink-light); border-radius: 15px; padding: 15px; margin-bottom: 12px; border: 2px solid var(--baby-pink); position: relative; }
+        .saved-content { padding-left: 45px; }
+        .saved-title { font-weight: 600; color: var(--gold); font-size: 1.1em; margin-bottom: 5px; }
+        .saved-text { color: var(--text-dark); line-height: 1.6; }
+        .saved-meta { margin-top: 8px; font-size: 0.85em; color: var(--text-light); }
+        .delete-btn { position: absolute; left: 10px; top: 10px; background: var(--baby-pink-dark); color: white; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 16px; }
+        .delete-btn:hover { background: #ff6b6b; }
+        .contact-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--baby-pink); border: 2px solid var(--baby-pink-dark); display: inline-flex; align-items: center; justify-content: center; font-size: 1em; color: var(--text-dark); font-weight: 600; margin-left: 10px; }
+        .members-counter { background: var(--baby-pink-light); color: var(--text-dark); padding: 15px 25px; border-radius: 15px; display: inline-flex; align-items: center; gap: 10px; margin-bottom: 20px; border: 2px solid var(--baby-pink); }
+        .members-counter .count { font-size: 1.5em; font-weight: 700; color: var(--gold); }
+        .empty-state { text-align: center; padding: 40px; color: var(--text-light); }
+        .empty-state .icon { font-size: 3em; margin-bottom: 15px; opacity: 0.5; }
+        .reminder-status { display: inline-block; padding: 3px 10px; border-radius: 10px; font-size: 0.85em; margin-left: 10px; }
+        .reminder-status.pending { background: var(--baby-pink); color: var(--text-dark); }
+        .reminder-status.completed { background: var(--baby-pink-light); color: var(--text-dark); }
+        .calendar-display { background: var(--baby-pink-light); border-radius: 15px; padding: 20px; text-align: center; margin-bottom: 20px; border: 2px solid var(--baby-pink); }
+        .calendar-display .hebrew-date { font-size: 1.8em; color: var(--gold); font-weight: 600; }
+        .calendar-display .gregorian-date { font-size: 1.2em; color: var(--text-light); }
+        .calendar-display .day-name { font-size: 1em; color: var(--text-dark); margin-top: 5px; }
+        .shabbat-box { margin-top: 30px; padding: 20px; background: var(--baby-pink-light); border-radius: 15px; border: 2px solid var(--baby-pink); }
+        .shabbat-box h3 { color: var(--gold); margin-bottom: 15px; }
+        @media (max-width: 768px) { .header h1 { font-size: 2em; } .tab-btn { padding: 10px 15px; font-size: 0.9em; } }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <h1>הכנישתא שלי</h1>
+            <div class="quote-box">
+                <span class="source">תַּנָּא דְּבֵי אֵלִיָּהוּ (אֵלִיָּהוּ זוּטָא יד):</span>
+                "אֵין יִשְׂרָאֵל נִגְאָלִים לֹא מִתּוֹךְ הַצַּעַר, וְלֹא מִתּוֹךְ הַשִּׁעְבּוּד, וְלֹא מִתּוֹךְ הַטִּלְטוּל, וְלֹא מִתּוֹךְ הַטֵּרוּף, וְלֹא מִתּוֹךְ הַדּוֹחַק, וְלֹא מִתּוֹךְ שֶׁאֵין לָהֶם מְזוֹנוֹת, אֶלָּא מִתּוֹךְ עֲשָׂרָה בְּנֵי אָדָם שֶׁהֵם יוֹשְׁבִים זֶה אֵצֶל זֶה, וְיִהְיֶה כָּל אֶחָד מֵהֶם קוֹרֵא וְשׁוֹנֶה עִם חֲבֵרוֹ וְקוֹלָם נִשְׁמָע, שֶׁנֶּאֱמַר (עוֹבַדְיָה א, יז): וּבְהַר צִיּוֹן תִּהְיֶה פְלֵיטָה וְהָיָה קֹדֶשׁ"
+            </div>
+        </header>
+        
+        <div class="tabs-container">
+            <div class="tabs" id="tabsContainer"></div>
+        </div>
+        
+        <div class="content-area" id="contentArea"></div>
+    </div>
+    
+    <script>
+        // ============ DELETE FUNCTION - MUST BE FIRST ============
+        function delItem(key, idx) {
+            var arr = JSON.parse(localStorage.getItem(key) || '[]');
+            arr.splice(idx, 1);
+            localStorage.setItem(key, JSON.stringify(arr));
+            renderCurrentTab();
+        }
+        
+        function toggleRem(idx) {
+            var arr = JSON.parse(localStorage.getItem('knishta_reminders') || '[]');
+            arr[idx].completed = !arr[idx].completed;
+            localStorage.setItem('knishta_reminders', JSON.stringify(arr));
+            renderCurrentTab();
+        }
+        // ============ END DELETE FUNCTION ============
+        
+        var currentTab = 'contacts';
+        
+        var tabs = [
+            { id: 'contacts', icon: '👥', label: 'אנשי קשר' },
+            { id: 'discussions', icon: '💬', label: 'דיונים' },
+            { id: 'insights', icon: '💡', label: 'תובנות' },
+            { id: 'reminders', icon: '🔔', label: 'תזכורות' },
+            { id: 'ideas', icon: '✨', label: 'רעיונות' },
+            { id: 'meetings', icon: '📅', label: 'זמני מפגשים' },
+            { id: 'calendar', icon: '📆', label: 'תאריכון' },
+            { id: 'birthdays', icon: '🎂', label: 'ימי הולדת' }
+        ];
+        
+        function getData(key) {
+            return JSON.parse(localStorage.getItem(key) || '[]');
+        }
+        
+        function formatDate(d) {
+            if (!d) return '';
+            return new Date(d).toLocaleDateString('he-IL');
+        }
+        
+        function getInitials(name) {
+            if (!name) return '?';
+            return name.split(' ').map(function(n) { return n[0]; }).join('').substring(0, 2);
+        }
+        
+        function renderTabs() {
+            var html = '';
+            for (var i = 0; i < tabs.length; i++) {
+                var t = tabs[i];
+                html += '<button class="tab-btn ' + (currentTab === t.id ? 'active' : '') + '" onclick="switchTab(\'' + t.id + '\')"><span class="icon">' + t.icon + '</span>' + t.label + '</button>';
+            }
+            document.getElementById('tabsContainer').innerHTML = html;
+        }
+        
+        function switchTab(id) {
+            currentTab = id;
+            renderTabs();
+            renderCurrentTab();
+        }
+        
+        function renderCurrentTab() {
+            var content = document.getElementById('contentArea');
+            if (currentTab === 'contacts') renderContacts(content);
+            else if (currentTab === 'discussions') renderDiscussions(content);
+            else if (currentTab === 'insights') renderInsights(content);
+            else if (currentTab === 'reminders') renderReminders(content);
+            else if (currentTab === 'ideas') renderIdeas(content);
+            else if (currentTab === 'meetings') renderMeetings(content);
+            else if (currentTab === 'calendar') renderCalendar(content);
+            else if (currentTab === 'birthdays') renderBirthdays(content);
+        }
+        
+        // ========== CONTACTS ==========
+        function renderContacts(el) {
+            var items = getData('knishta_contacts');
+            var html = '<h2 class="section-title">👥 אנשי קשר בכנישתא</h2>';
+            html += '<div class="members-counter"><span>חברי הכנישתא:</span><span class="count">' + items.length + '</span></div>';
+            html += '<div class="form-group"><label>שם מלא</label><input type="text" id="f_name" placeholder="הכנס שם..."></div>';
+            html += '<div class="form-row"><div class="form-group"><label>טלפון</label><input type="tel" id="f_phone" placeholder="050-0000000"></div>';
+            html += '<div class="form-group"><label>אימייל</label><input type="email" id="f_email" placeholder="email@example.com"></div></div>';
+            html += '<div class="form-group"><label>הערות</label><input type="text" id="f_notes" placeholder="תפקיד, תחום עיסוק..."></div>';
+            html += '<div class="form-row"><div class="form-group"><label>תאריך לידה לועזי</label><input type="date" id="f_bday_g"></div>';
+            html += '<div class="form-group"><label>תאריך לידה עברי</label><input type="text" id="f_bday_h" placeholder="כ״ה בכסלו"></div></div>';
+            html += '<div class="btn-group"><button class="btn btn-primary" onclick="addContact()">➕ הוסף איש קשר</button></div>';
+            html += '<div class="items-list"><h3>חברי הכנישתא</h3><div id="itemsList">';
+            if (items.length === 0) {
+                html += '<div class="empty-state"><div class="icon">👥</div><p>עדיין אין אנשי קשר</p></div>';
+            } else {
+                for (var i = 0; i < items.length; i++) {
+                    var c = items[i];
+                    html += '<div class="saved-item">';
+                    html += '<button class="delete-btn" onclick="delItem(\'knishta_contacts\',' + i + ')">✕</button>';
+                    html += '<div class="saved-content">';
+                    html += '<div style="display:flex;align-items:center;margin-bottom:8px;"><div class="contact-avatar">' + getInitials(c.name) + '</div>';
+                    html += '<div class="saved-title" style="margin-bottom:0;">' + c.name + '</div></div>';
+                    html += '<div class="saved-text">' + (c.phone ? '📞 ' + c.phone : '') + (c.email ? ' | 📧 ' + c.email : '') + '</div>';
+                    if (c.notes) html += '<div class="saved-text">' + c.notes + '</div>';
+                    if (c.bday_h || c.bday_g) html += '<div class="saved-meta">🎂 ' + (c.bday_h ? 'עברי: ' + c.bday_h : '') + (c.bday_g ? ' | לועזי: ' + formatDate(c.bday_g) : '') + '</div>';
+                    html += '</div></div>';
+                }
+            }
+            html += '</div></div>';
+            el.innerHTML = html;
+        }
+        
+        function addContact() {
+            var name = document.getElementById('f_name').value.trim();
+            if (!name) { alert('נא להזין שם'); return; }
+            var items = getData('knishta_contacts');
+            items.push({
+                name: name,
+                phone: document.getElementById('f_phone').value.trim(),
+                email: document.getElementById('f_email').value.trim(),
+                notes: document.getElementById('f_notes').value.trim(),
+                bday_g: document.getElementById('f_bday_g').value,
+                bday_h: document.getElementById('f_bday_h').value.trim(),
+                date: new Date().toISOString()
+            });
+            localStorage.setItem('knishta_contacts', JSON.stringify(items));
+            renderCurrentTab();
+        }
+        
+        // ========== DISCUSSIONS ==========
+        function renderDiscussions(el) {
+            var items = getData('knishta_discussions');
+            var html = '<h2 class="section-title">💬 דיונים</h2>';
+            html += '<div class="form-group"><label>נושא הדיון</label><input type="text" id="f_title" placeholder="על מה מדברים..."></div>';
+            html += '<div class="form-group"><label>תוכן הדיון</label><textarea id="f_content" placeholder="פרטי הדיון..."></textarea></div>';
+            html += '<div class="form-group"><label>משתתפים</label><input type="text" id="f_participants" placeholder="מי השתתף בדיון..."></div>';
+            html += '<div class="btn-group"><button class="btn btn-primary" onclick="addDiscussion()">➕ הוסף דיון</button></div>';
+            html += '<div class="items-list"><h3>דיונים קודמים</h3><div id="itemsList">';
+            if (items.length === 0) {
+                html += '<div class="empty-state"><div class="icon">💬</div><p>עדיין אין דיונים</p></div>';
+            } else {
+                for (var i = 0; i < items.length; i++) {
+                    var d = items[i];
+                    html += '<div class="saved-item">';
+                    html += '<button class="delete-btn" onclick="delItem(\'knishta_discussions\',' + i + ')">✕</button>';
+                    html += '<div class="saved-content"><div class="saved-title">' + d.title + '</div>';
+                    html += '<div class="saved-text">' + d.content + '</div>';
+                    if (d.participants) html += '<div class="saved-meta">👥 משתתפים: ' + d.participants + '</div>';
+                    html += '<div class="saved-meta">' + formatDate(d.date) + '</div>';
+                    html += '</div></div>';
+                }
+            }
+            html += '</div></div>';
+            el.innerHTML = html;
+        }
+        
+        function addDiscussion() {
+            var title = document.getElementById('f_title').value.trim();
+            if (!title) { alert('נא להזין נושא'); return; }
+            var items = getData('knishta_discussions');
+            items.unshift({
+                title: title,
+                content: document.getElementById('f_content').value.trim(),
+                participants: document.getElementById('f_participants').value.trim(),
+                date: new Date().toISOString()
+            });
+            localStorage.setItem('knishta_discussions', JSON.stringify(items));
+            renderCurrentTab();
+        }
+        
+        // ========== INSIGHTS ==========
+        function renderInsights(el) {
+            var items = getData('knishta_insights');
+            var html = '<h2 class="section-title">💡 תובנות</h2>';
+            html += '<div class="form-group"><label>כותרת התובנה</label><input type="text" id="f_title" placeholder="תובנה בנושא..."></div>';
+            html += '<div class="form-group"><label>תוכן התובנה</label><textarea id="f_content" placeholder="פרט את התובנה..."></textarea></div>';
+            html += '<div class="form-group"><label>מקור</label><input type="text" id="f_source" placeholder="מאיפה הגיעה התובנה..."></div>';
+            html += '<div class="btn-group"><button class="btn btn-primary" onclick="addInsight()">➕ הוסף תובנה</button></div>';
+            html += '<div class="items-list"><h3>תובנות שנאספו</h3><div id="itemsList">';
+            if (items.length === 0) {
+                html += '<div class="empty-state"><div class="icon">💡</div><p>עדיין אין תובנות</p></div>';
+            } else {
+                for (var i = 0; i < items.length; i++) {
+                    var d = items[i];
+                    html += '<div class="saved-item">';
+                    html += '<button class="delete-btn" onclick="delItem(\'knishta_insights\',' + i + ')">✕</button>';
+                    html += '<div class="saved-content"><div class="saved-title">' + d.title + '</div>';
+                    html += '<div class="saved-text">' + d.content + '</div>';
+                    if (d.source) html += '<div class="saved-meta">📚 מקור: ' + d.source + '</div>';
+                    html += '<div class="saved-meta">' + formatDate(d.date) + '</div>';
+                    html += '</div></div>';
+                }
+            }
+            html += '</div></div>';
+            el.innerHTML = html;
+        }
+        
+        function addInsight() {
+            var title = document.getElementById('f_title').value.trim();
+            if (!title) { alert('נא להזין כותרת'); return; }
+            var items = getData('knishta_insights');
+            items.unshift({
+                title: title,
+                content: document.getElementById('f_content').value.trim(),
+                source: document.getElementById('f_source').value.trim(),
+                date: new Date().toISOString()
+            });
+            localStorage.setItem('knishta_insights', JSON.stringify(items));
+            renderCurrentTab();
+        }
+        
+        // ========== REMINDERS ==========
+        function renderReminders(el) {
+            var items = getData('knishta_reminders');
+            var html = '<h2 class="section-title">🔔 תזכורות</h2>';
+            html += '<div class="form-group"><label>תזכורת</label><input type="text" id="f_title" placeholder="מה לזכור..."></div>';
+            html += '<div class="form-row"><div class="form-group"><label>תאריך</label><input type="date" id="f_date"></div>';
+            html += '<div class="form-group"><label>שעה</label><input type="time" id="f_time"></div></div>';
+            html += '<div class="form-group"><label>פרטים נוספים</label><textarea id="f_notes" placeholder="הערות..."></textarea></div>';
+            html += '<div class="btn-group"><button class="btn btn-primary" onclick="addReminder()">➕ הוסף תזכורת</button></div>';
+            html += '<div class="items-list"><h3>תזכורות פעילות</h3><div id="itemsList">';
+            if (items.length === 0) {
+                html += '<div class="empty-state"><div class="icon">🔔</div><p>אין תזכורות</p></div>';
+            } else {
+                for (var i = 0; i < items.length; i++) {
+                    var r = items[i];
+                    html += '<div class="saved-item" style="' + (r.completed ? 'opacity:0.6;' : '') + '">';
+                    html += '<button class="delete-btn" onclick="delItem(\'knishta_reminders\',' + i + ')">✕</button>';
+                    html += '<div class="saved-content"><div class="saved-title">';
+                    html += '<span class="reminder-status ' + (r.completed ? 'completed' : 'pending') + '">' + (r.completed ? '✓ בוצע' : '⏳ ממתין') + '</span>';
+                    html += r.title + '</div>';
+                    html += '<div class="saved-text">' + r.notes + '</div>';
+                    html += '<div class="saved-meta">' + formatDate(r.date) + ' ' + (r.time || '') + '</div>';
+                    html += '<button class="btn btn-secondary" style="margin-top:10px" onclick="toggleRem(' + i + ')">' + (r.completed ? 'סמן כלא בוצע' : 'סמן כבוצע') + '</button>';
+                    html += '</div></div>';
+                }
+            }
+            html += '</div></div>';
+            el.innerHTML = html;
+        }
+        
+        function addReminder() {
+            var title = document.getElementById('f_title').value.trim();
+            if (!title) { alert('נא להזין תזכורת'); return; }
+            var items = getData('knishta_reminders');
+            items.unshift({
+                title: title,
+                date: document.getElementById('f_date').value,
+                time: document.getElementById('f_time').value,
+                notes: document.getElementById('f_notes').value.trim(),
+                completed: false,
+                created: new Date().toISOString()
+            });
+            localStorage.setItem('knishta_reminders', JSON.stringify(items));
+            renderCurrentTab();
+        }
+        
+        // ========== IDEAS ==========
+        function renderIdeas(el) {
+            var items = getData('knishta_ideas');
+            var html = '<h2 class="section-title">✨ רעיונות</h2>';
+            html += '<div class="form-group"><label>שם הרעיון</label><input type="text" id="f_title" placeholder="רעיון חדש..."></div>';
+            html += '<div class="form-group"><label>תיאור הרעיון</label><textarea id="f_content" placeholder="פרט את הרעיון..."></textarea></div>';
+            html += '<div class="form-group"><label>קטגוריה</label><select id="f_category"><option value="לימוד">לימוד</option><option value="פעילות">פעילות</option><option value="חסד">חסד</option><option value="קהילה">קהילה</option><option value="אחר">אחר</option></select></div>';
+            html += '<div class="btn-group"><button class="btn btn-primary" onclick="addIdea()">➕ הוסף רעיון</button></div>';
+            html += '<div class="items-list"><h3>בנק הרעיונות</h3><div id="itemsList">';
+            if (items.length === 0) {
+                html += '<div class="empty-state"><div class="icon">✨</div><p>עדיין אין רעיונות</p></div>';
+            } else {
+                for (var i = 0; i < items.length; i++) {
+                    var d = items[i];
+                    html += '<div class="saved-item">';
+                    html += '<button class="delete-btn" onclick="delItem(\'knishta_ideas\',' + i + ')">✕</button>';
+                    html += '<div class="saved-content"><div class="saved-title">' + d.title + ' <span style="color:var(--text-light);font-weight:normal;">(' + d.category + ')</span></div>';
+                    html += '<div class="saved-text">' + d.content + '</div>';
+                    html += '<div class="saved-meta">' + formatDate(d.date) + '</div>';
+                    html += '</div></div>';
+                }
+            }
+            html += '</div></div>';
+            el.innerHTML = html;
+        }
+        
+        function addIdea() {
+            var title = document.getElementById('f_title').value.trim();
+            if (!title) { alert('נא להזין שם לרעיון'); return; }
+            var items = getData('knishta_ideas');
+            items.unshift({
+                title: title,
+                content: document.getElementById('f_content').value.trim(),
+                category: document.getElementById('f_category').value,
+                date: new Date().toISOString()
+            });
+            localStorage.setItem('knishta_ideas', JSON.stringify(items));
+            renderCurrentTab();
+        }
+        
+        // ========== MEETINGS ==========
+        function renderMeetings(el) {
+            var items = getData('knishta_meetings');
+            var html = '<h2 class="section-title">📅 זמני מפגשים</h2>';
+            html += '<div class="form-group"><label>שם המפגש</label><input type="text" id="f_title" placeholder="נושא המפגש..."></div>';
+            html += '<div class="form-row"><div class="form-group"><label>תאריך</label><input type="date" id="f_date"></div>';
+            html += '<div class="form-group"><label>שעה</label><input type="time" id="f_time"></div></div>';
+            html += '<div class="form-group"><label>מיקום</label><input type="text" id="f_location" placeholder="היכן נפגשים..."></div>';
+            html += '<div class="form-group"><label>הערות</label><textarea id="f_notes" placeholder="פרטים נוספים..."></textarea></div>';
+            html += '<div class="btn-group"><button class="btn btn-primary" onclick="addMeeting()">➕ הוסף מפגש</button></div>';
+            html += '<div class="items-list"><h3>מפגשים מתוכננים</h3><div id="itemsList">';
+            if (items.length === 0) {
+                html += '<div class="empty-state"><div class="icon">📅</div><p>אין מפגשים מתוכננים</p></div>';
+            } else {
+                for (var i = 0; i < items.length; i++) {
+                    var m = items[i];
+                    html += '<div class="saved-item">';
+                    html += '<button class="delete-btn" onclick="delItem(\'knishta_meetings\',' + i + ')">✕</button>';
+                    html += '<div class="saved-content"><div class="saved-title">' + m.title + '</div>';
+                    html += '<div class="saved-text">' + m.notes + '</div>';
+                    if (m.location) html += '<div class="saved-meta">📍 ' + m.location + '</div>';
+                    html += '<div class="saved-meta">' + formatDate(m.date) + ' ' + (m.time || '') + '</div>';
+                    html += '</div></div>';
+                }
+            }
+            html += '</div></div>';
+            el.innerHTML = html;
+        }
+        
+        function addMeeting() {
+            var title = document.getElementById('f_title').value.trim();
+            if (!title) { alert('נא להזין שם למפגש'); return; }
+            var items = getData('knishta_meetings');
+            items.unshift({
+                title: title,
+                date: document.getElementById('f_date').value,
+                time: document.getElementById('f_time').value,
+                location: document.getElementById('f_location').value.trim(),
+                notes: document.getElementById('f_notes').value.trim(),
+                created: new Date().toISOString()
+            });
+            localStorage.setItem('knishta_meetings', JSON.stringify(items));
+            renderCurrentTab();
+        }
+        
+        // ========== CALENDAR ==========
+        function renderCalendar(el) {
+            var now = new Date();
+            var dayNames = ['יום ראשון','יום שני','יום שלישי','יום רביעי','יום חמישי','יום שישי','שבת קודש'];
+            
+            // Calculate Hebrew date locally
+            var hebrewDate = getHebrewDate(now);
+            
+            var html = '<h2 class="section-title">📆 תאריכון עברי ולועזי</h2>';
+            html += '<div class="calendar-display">';
+            html += '<div class="hebrew-date">' + hebrewDate + '</div>';
+            html += '<div class="gregorian-date">' + now.toLocaleDateString('he-IL', {year:'numeric',month:'long',day:'numeric'}) + '</div>';
+            html += '<div class="day-name">' + dayNames[now.getDay()] + '</div>';
+            html += '</div>';
+            html += '<div class="shabbat-box"><h3>🕯️ זמני שבת השבוע</h3><p>לזמנים מדויקים: <a href="https://www.hebcal.com/shabbat?geonameid=293397" target="_blank">hebcal.com</a></p></div>';
+            el.innerHTML = html;
+        }
+        
+        function getHebrewDate(date) {
+            // Hebrew date calculation algorithm
+            var months = ['תשרי','חשוון','כסלו','טבת','שבט','אדר','ניסן','אייר','סיוון','תמוז','אב','אלול'];
+            var days = ["א'","ב'","ג'","ד'","ה'","ו'","ז'","ח'","ט'","י'","יא'","יב'","יג'","יד'","טו'","טז'","יז'","יח'","יט'","כ'","כא'","כב'","כג'","כד'","כה'","כו'","כז'","כח'","כט'","ל'"];
+            
+            // Base calculation: Jan 2, 2026 = 12 Tevet 5786
+            var baseDate = new Date(2026, 0, 2);
+            var baseHebDay = 12;
+            var baseHebMonth = 3; // Tevet (index in months array)
+            var baseHebYear = 5786;
+            
+            var diffDays = Math.floor((date - baseDate) / (1000 * 60 * 60 * 24));
+            
+            var hebDay = baseHebDay + diffDays;
+            var hebMonth = baseHebMonth;
+            var hebYear = baseHebYear;
+            
+            // Month lengths for 5786 (regular year)
+            var monthLengths = [30, 29, 30, 29, 30, 29, 30, 29, 30, 29, 30, 29];
+            
+            // Adjust for month overflow/underflow
+            while (hebDay > monthLengths[hebMonth]) {
+                hebDay -= monthLengths[hebMonth];
+                hebMonth++;
+                if (hebMonth >= 12) {
+                    hebMonth = 0;
+                    hebYear++;
+                }
+            }
+            while (hebDay < 1) {
+                hebMonth--;
+                if (hebMonth < 0) {
+                    hebMonth = 11;
+                    hebYear--;
+                }
+                hebDay += monthLengths[hebMonth];
+            }
+            
+            return days[hebDay] + ' ב' + months[hebMonth] + ' התשפ״ו';
+        }
+        
+        // ========== BIRTHDAYS ==========
+        function renderBirthdays(el) {
+            var contacts = getData('knishta_contacts');
+            var manualBirthdays = getData('knishta_birthdays');
+            
+            // Get birthdays from contacts with their index
+            var contactBirthdays = [];
+            for (var i = 0; i < contacts.length; i++) {
+                var c = contacts[i];
+                if (c.bday_h || c.bday_g) {
+                    contactBirthdays.push({ name: c.name, hebrew: c.bday_h, gregorian: c.bday_g, auto: true, contactIndex: i });
+                }
+            }
+            
+            var html = '<h2 class="section-title">🎂 ימי הולדת</h2>';
+            html += '<div class="form-group"><label>שם</label><input type="text" id="f_bday_name" placeholder="שם החבר/ה..."></div>';
+            html += '<div class="form-row"><div class="form-group"><label>תאריך לועזי</label><input type="date" id="f_bday_g"></div>';
+            html += '<div class="form-group"><label>תאריך עברי</label><input type="text" id="f_bday_h" placeholder="כ״ה בכסלו"></div></div>';
+            html += '<div class="btn-group"><button class="btn btn-primary" onclick="addBirthday()">➕ הוסף יום הולדת</button></div>';
+            html += '<div class="items-list"><h3>ימי הולדת בכנישתא</h3><div id="itemsList">';
+            
+            var allBirthdays = contactBirthdays.concat(manualBirthdays.map(function(b, i) { b.manualIndex = i; return b; }));
+            
+            if (allBirthdays.length === 0) {
+                html += '<div class="empty-state"><div class="icon">🎂</div><p>אין ימי הולדת רשומים</p></div>';
+            } else {
+                for (var i = 0; i < allBirthdays.length; i++) {
+                    var b = allBirthdays[i];
+                    html += '<div class="saved-item">';
+                    if (b.auto) {
+                        html += '<button class="delete-btn" onclick="delContactBirthday(' + b.contactIndex + ')">✕</button>';
+                    } else {
+                        html += '<button class="delete-btn" onclick="delItem(\'knishta_birthdays\',' + b.manualIndex + ')">✕</button>';
+                    }
+                    html += '<div style="font-size:2em;margin-left:15px;">🎂</div>';
+                    html += '<div class="saved-content"><div class="saved-title">' + b.name + (b.auto ? ' <small style="color:var(--text-light);">(מאנשי קשר)</small>' : '') + '</div>';
+                    html += '<div class="saved-text">';
+                    if (b.hebrew) html += '📅 עברי: ' + b.hebrew;
+                    if (b.hebrew && b.gregorian) html += ' | ';
+                    if (b.gregorian) html += '📆 לועזי: ' + formatDate(b.gregorian);
+                    html += '</div>';
+                    html += '</div></div>';
+                }
+            }
+            html += '</div></div>';
+            el.innerHTML = html;
+        }
+        
+        function delContactBirthday(contactIndex) {
+            var contacts = getData('knishta_contacts');
+            contacts[contactIndex].bday_h = '';
+            contacts[contactIndex].bday_g = '';
+            localStorage.setItem('knishta_contacts', JSON.stringify(contacts));
+            renderCurrentTab();
+        }
+        
+        function addBirthday() {
+            var name = document.getElementById('f_bday_name').value.trim();
+            if (!name) { alert('נא להזין שם'); return; }
+            var items = getData('knishta_birthdays');
+            items.push({
+                name: name,
+                gregorian: document.getElementById('f_bday_g').value,
+                hebrew: document.getElementById('f_bday_h').value.trim()
+            });
+            localStorage.setItem('knishta_birthdays', JSON.stringify(items));
+            renderCurrentTab();
+        }
+        
+        // Initialize
+        renderTabs();
+        renderCurrentTab();
+    </script>
+</body>
+</html>
