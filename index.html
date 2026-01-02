@@ -34,9 +34,9 @@
         .header .subtitle { font-size: 1.1em; color: var(--text-light); margin-bottom: 20px; }
         .quote-box { background: var(--baby-pink-light); padding: 20px; border-radius: 15px; border-right: 4px solid var(--gold); text-align: right; font-size: 0.95em; line-height: 1.8; }
         .quote-box .source { font-weight: 600; color: var(--gold); margin-bottom: 10px; display: block; }
-        .tabs-container { background: var(--white); border-radius: 20px; padding: 15px; margin-bottom: 20px; border: 2px solid var(--baby-pink-dark); overflow-x: auto; }
-        .tabs { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
-        .tab-btn { padding: 12px 20px; border: 2px solid var(--baby-pink-dark); background: var(--white); border-radius: 25px; cursor: pointer; font-family: inherit; font-size: 0.95em; font-weight: 500; color: var(--text-dark); transition: all 0.3s ease; white-space: nowrap; }
+        .tabs-container { background: var(--white); border-radius: 20px; padding: 15px; margin-bottom: 20px; border: 2px solid var(--baby-pink-dark); overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .tabs { display: flex; gap: 8px; flex-wrap: nowrap; justify-content: flex-start; min-width: max-content; }
+        .tab-btn { padding: 10px 14px; border: 2px solid var(--baby-pink-dark); background: var(--white); border-radius: 20px; cursor: pointer; font-family: inherit; font-size: 0.85em; font-weight: 500; color: var(--text-dark); transition: all 0.3s ease; white-space: nowrap; flex-shrink: 0; }
         .tab-btn:hover { background: var(--baby-pink-light); }
         .tab-btn.active { background: var(--baby-pink); border-color: var(--baby-pink-dark); }
         .tab-btn .icon { margin-left: 8px; }
@@ -80,7 +80,7 @@
         .calendar-display .day-name { font-size: 1em; color: var(--text-dark); margin-top: 5px; }
         .shabbat-box { margin-top: 30px; padding: 20px; background: var(--baby-pink-light); border-radius: 15px; border: 2px solid var(--baby-pink); }
         .shabbat-box h3 { color: var(--gold); margin-bottom: 15px; }
-        @media (max-width: 768px) { .header h1 { font-size: 2em; } .tab-btn { padding: 10px 15px; font-size: 0.9em; } }
+        @media (max-width: 768px) { .header h1 { font-size: 2em; } .tab-btn { padding: 8px 12px; font-size: 0.8em; } .tabs-container { padding: 10px; } }
     </style>
 </head>
 <body>
